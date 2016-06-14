@@ -1,2 +1,8 @@
 # SimpleHttpAndroid
 学习了Mr.Simple的simple_net_framework，为了加深理解，自己动手写出来。
+正如Mr.Simple说的那样，我们的目标并不是要重新发明轮子，而是以学习轮子制作的过程来达到提升自我的目的。
+
+
+不同用户的服务器返回的数据格式是不一致的，因此我们定义了Request<T>泛型基类，泛型T就是返回的数据格式类型。
+比如返回的数据格式为json，那对应的请求就是JsonRequest,泛型T为JSONObject，在JsonRequest中覆写parseResponse函数，将得到的Response中的原始数据转换成JSONObject。
+然后将请求放到队列中，NetworkExecutor将请求分发给HttpStack执行，执行完成之后得到Response对象，最终ResponseDelivery将结果通过请求回调投递到UI线程。

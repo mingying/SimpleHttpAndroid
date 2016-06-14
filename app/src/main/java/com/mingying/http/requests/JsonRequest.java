@@ -13,8 +13,10 @@ public class JsonRequest extends Request<JSONObject> {
     public JsonRequest(HttpMethod method, String url, RequestListener<JSONObject> listener){
         super(method, url, listener);
     }
+
     @Override
     public JSONObject parseResponse(Response response) {
+
         return null;
     }
 }

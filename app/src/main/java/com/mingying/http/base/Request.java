@@ -1,5 +1,7 @@
 package com.mingying.http.base;
 
+import org.apache.http.HttpStatus;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -12,7 +14,8 @@ public abstract class Request<T> implements Comparable<Request<T>> {
 
 
     public interface RequestListener<T>{
-        void onComplete(int code,T response, String error);
+        void onComplete(int code,T response);
+        void onError(int code, String error);
     }
 
     /**
@@ -41,6 +44,11 @@ public abstract class Request<T> implements Comparable<Request<T>> {
             return mHttpMethod;
         }
     }
+
+    /**
+     * Default Content-type
+     */
+    public final static String HEADER_CONTENT_TYPE = "Content-Type";
 
     private static final String DEFAULT_PARAMS_ENCODING = "UTF-8";
     /**
@@ -86,6 +94,10 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         mRequestListener = listener;
     }
 
+    public void addHeader(String name, String value) {
+        mHeaders.put(name, value);
+    }
+
     /**
      * 从原生的网络请求中解析结果,子类覆写
      * @param response
@@ -101,18 +113,20 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     public void deliveryResponse(Response response){
         T result = parseResponse(response);
         if (mRequestListener != null){
-            // TODO: 2016/6/13 回调请求结果
-            int code  = 0;
-            String error = null;
-            mRequestListener.onComplete(code,result,error);
+            int code  = response != null ? response.getStatusCode() : -1;
+            if (code == HttpStatus.SC_OK){
+                mRequestListener.onComplete(code,result);
+            }else{
+                String error = response != null ? response.getMessage() : "Unknow error!!!" ;
+                mRequestListener.onError(code,error);
+            }
+
         }
     }
 
     public String getUrl() {
         return mUrl;
     }
-
-
 
     public int getSerialNumber() {
         return mSerialNum;
@@ -150,6 +164,22 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         return mBodyParams;
     }
 
+    public boolean isHttps() {
+        return mUrl.startsWith("https");
+    }
+
+    /**
+     * 该请求是否应该缓存
+     *
+     * @param shouldCache
+     */
+    public void setShouldCache(boolean shouldCache) {
+        this.mShouldCache = shouldCache;
+    }
+
+    public boolean shouldCache() {
+        return mShouldCache;
+    }
 
     public void cancel() {
         isCancel = true;
@@ -195,7 +225,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         Priority myPriority = this.getPriority();
         Priority anotherPriority = another.getPriority();
         // 如果优先级相等,那么按照添加到队列的序列号顺序来执行
-        return myPriority.equals(another) ? this.getSerialNumber() - another.getSerialNumber()
+        return myPriority.equals(anotherPriority) ? this.getSerialNumber() - another.getSerialNumber()
                 : myPriority.ordinal() - anotherPriority.ordinal();
     }
 
