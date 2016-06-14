@@ -1,5 +1,7 @@
 package com.mingying.http.core;
 
+import android.util.Log;
+
 import com.mingying.http.base.Request;
 import com.mingying.http.base.Response;
 import com.mingying.http.cache.Cache;
@@ -40,7 +42,10 @@ public final class NetworkExecutor extends Thread{
     public void run() {
         try {
             while (!isStop){
+                //Retrieves and removes the head of this queue, waiting if necessary
+                // until an element becomes available.
                 Request<?> request = mQueue.take();
+                Log.e("chl","is running" + request.getUrl());
                 if (request.isCanceled()){
                     continue;
                 }

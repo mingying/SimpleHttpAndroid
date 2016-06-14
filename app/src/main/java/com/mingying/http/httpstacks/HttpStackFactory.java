@@ -7,7 +7,7 @@ import android.os.Build;
  *
  * Created by Administrator on 2016/6/14.
  */
-public class HttpStackFactory {
+public final class HttpStackFactory {
 
     private static final int GINGERBREAD_SDK_NUM = 9;
 

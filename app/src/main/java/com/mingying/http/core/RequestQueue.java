@@ -1,5 +1,7 @@
 package com.mingying.http.core;
 
+import android.util.Log;
+
 import com.mingying.http.base.Request;
 import com.mingying.http.httpstacks.HttpStack;
 import com.mingying.http.httpstacks.HttpStackFactory;
