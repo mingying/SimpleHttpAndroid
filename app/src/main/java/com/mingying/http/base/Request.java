@@ -111,6 +111,10 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      * @param response
      */
     public void deliveryResponse(Response response){
+        if (response == null || response.getRawData() == null || response.getRawData().length == 0){
+            String error = "Not Find Resource !!!" ;
+            mRequestListener.onError(404,error);
+        }
         T result = parseResponse(response);
         if (mRequestListener != null){
             int code  = response != null ? response.getStatusCode() : -1;
