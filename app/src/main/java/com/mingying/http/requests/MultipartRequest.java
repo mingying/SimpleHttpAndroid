@@ -2,7 +2,7 @@ package com.mingying.http.requests;
 
 import android.util.Log;
 
-import com.mingying.http.MultipartEntity.MultipartEntity;
+import com.mingying.http.entity.MultipartEntity;
 import com.mingying.http.base.Request;
 import com.mingying.http.base.Response;
 

@@ -17,6 +17,7 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
@@ -37,6 +38,7 @@ public class HttpClientStack implements HttpStack {
     @Override
     public Response performRequest(Request<?> request) {
         try {
+            mHttpClient.getParams().setParameter(CoreProtocolPNames.USER_AGENT,mConfig.mUserAgent);
             HttpUriRequest httpRequest = createHttpRequest(request);
             // 添加连接参数
             setConnectionParams(httpRequest);

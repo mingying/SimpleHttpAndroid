@@ -1,4 +1,4 @@
-package com.mingying.http.MultipartEntity;
+package com.mingying.http.entity;
 
 import android.text.TextUtils;
 

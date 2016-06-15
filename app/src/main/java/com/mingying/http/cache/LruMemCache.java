@@ -1,6 +1,7 @@
 package com.mingying.http.cache;
 
 import android.support.v4.util.LruCache;
+import android.util.Log;
 
 import com.mingying.http.base.Response;
 
@@ -18,7 +19,7 @@ public class LruMemCache implements Cache<String, Response>{
         int maxMenory = (int)(Runtime.getRuntime().maxMemory()/1024);
 
         // 使用最大可用内存值的1/8作为缓存的大小。
-        int cacheSize = 1/8 * maxMenory/8;
+        int cacheSize =  maxMenory/8;
 
         mResponseCache = new LruCache<String, Response>(cacheSize){
 
